@@ -1,0 +1,4 @@
+date,team_a,team_b,team_a_goals,team_b_goals,team_a_elo,team_b_elo,team_a_rating,team_b_rating,neutral_site,tournament
+2022-12-18,Argentina,France,3,3,2143,2115,89,91,1,World Cup
+2022-12-14,France,Morocco,2,0,2115,1950,91,82,1,World Cup
+2022-12-13,Argentina,Croatia,3,0,2143,1980,89,84,1,World Cup
