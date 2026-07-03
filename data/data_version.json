@@ -1,0 +1,21 @@
+{
+  "model_version": "v0.1.0",
+  "last_updated": "2026-07-03 15:30 ET",
+  "data_sources": {
+    "teams": {
+      "source": "manual_csv",
+      "last_updated": "2026-07-03 15:20 ET",
+      "freshness": "high"
+    },
+    "matches": {
+      "source": "manual_csv",
+      "last_updated": "2026-07-03 15:25 ET",
+      "freshness": "high"
+    },
+    "team_stats": {
+      "source": "manual_csv",
+      "last_updated": "not_added_yet",
+      "freshness": "missing"
+    }
+  }
+}
