@@ -1,3 +1,4 @@
+import json
 import math
 
 import numpy as np
@@ -9,6 +10,17 @@ st.set_page_config(page_title="World Cup Quant Model", layout="wide")
 
 BASE_GOAL_RATE = 1.35
 MAX_GOALS = 6
+
+
+@st.cache_data(ttl=3600)
+def load_data():
+    teams = pd.read_csv("data/teams.csv")
+    matches = pd.read_csv("data/matches.csv")
+
+    with open("data/data_version.json", "r", encoding="utf-8") as file:
+        data_version = json.load(file)
+
+    return teams, matches, data_version
 
 
 def poisson_probability(goals, expected_goals):
@@ -80,19 +92,40 @@ def summarize_match(team_a, team_b, teams):
     }
 
 
+def data_status_table(data_version):
+    rows = []
+
+    for name, info in data_version["data_sources"].items():
+        rows.append({
+            "data_table": name,
+            "source": info["source"],
+            "last_updated": info["last_updated"],
+            "freshness": info["freshness"],
+        })
+
+    return pd.DataFrame(rows)
+
+
+teams, matches, data_version = load_data()
+
 st.title("World Cup Quant Model")
-st.write("Scoreline model foundation: team ratings, expected goals, score probabilities, and schedule prediction.")
+st.caption("Non-real-time, transparent football prediction model based on manually updated data.")
 
-teams = pd.read_csv("data/teams.csv")
-matches = pd.read_csv("data/matches.csv")
+top1, top2, top3 = st.columns(3)
+top1.metric("Model version", data_version["model_version"])
+top2.metric("Last updated", data_version["last_updated"])
+top3.metric("Data mode", "Manual CSV")
 
-tab1, tab2, tab3 = st.tabs(["Dashboard", "Match Predictor", "Schedule Prediction"])
+tab1, tab2, tab3, tab4 = st.tabs([
+    "Dashboard",
+    "Match Predictor",
+    "Schedule Prediction",
+    "Data Status",
+])
 
 with tab1:
-    st.subheader("Team Data")
-    st.dataframe(teams.sort_values("rating", ascending=False), use_container_width=True)
-
     st.subheader("Team Ratings")
+    st.dataframe(teams.sort_values("rating", ascending=False), use_container_width=True)
     st.bar_chart(teams.set_index("team")["rating"])
 
 with tab2:
@@ -101,8 +134,10 @@ with tab2:
     team_names = teams["team"].tolist()
 
     col1, col2 = st.columns(2)
+
     with col1:
         team_a = st.selectbox("Team A", team_names, index=0)
+
     with col2:
         team_b = st.selectbox("Team B", team_names, index=1)
 
@@ -156,3 +191,10 @@ with tab3:
         })
 
     st.dataframe(pd.DataFrame(predictions), use_container_width=True)
+
+with tab4:
+    st.subheader("Data Status")
+    st.write("This model is not real-time. Predictions are based on the latest manually updated data available in the repository.")
+    st.dataframe(data_status_table(data_version), use_container_width=True)
+
+    st.info("Next step: add team_stats.csv, match_results.csv, and historical_matches.csv for backtesting and machine learning.")
