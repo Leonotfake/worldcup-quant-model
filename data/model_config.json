@@ -1,0 +1,17 @@
+{
+  "model_version": "v0.1.0",
+  "base_goal_rate": 1.35,
+  "max_goals": 6,
+  "weights": {
+    "rating": 0.20,
+    "attack_rating": 0.25,
+    "defense_rating": 0.25,
+    "goals_per_match": 0.20,
+    "shots_on_target_per_match": 0.20,
+    "chances_created_per_match": 0.10
+  },
+  "lambda_limits": {
+    "min": 0.25,
+    "max": 3.20
+  }
+}
